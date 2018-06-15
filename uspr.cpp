@@ -46,6 +46,9 @@ along with uspr.  If not, see <http://www.gnu.org/licenses/>.
 #include "tbr.h"
 #include "uspr.h"
 
+//RJG - read files
+#include <fstream>
+
 using namespace std;
 
 // constants
@@ -112,9 +115,8 @@ string USAGE =
 
 
 // function prototypes
-
-
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 	int max_args = argc-1;
 	while (argc > 1) {
 		char *arg = argv[--argc];
@@ -189,64 +191,289 @@ int main(int argc, char *argv[]) {
 	// set random seed
 	srand(unsigned(time(0)));
 
-	// read input trees
+	// RJG read tree from sim file
 	string T1_line = "";
 	string T2_line = "";
-	while (getline(cin, T1_line) && getline(cin, T2_line)) {
-		// load into data structures
-		uforest F1 = uforest(T1_line, &label_map, &reverse_label_map);
-		F1.normalize_order();
-		uforest F2 = uforest(T2_line, &label_map, &reverse_label_map);
-		F2.normalize_order();
-		cout << "T1: " << F1.str(false, &reverse_label_map) << endl;
-		cout << "T2: " << F2.str(false, &reverse_label_map) << endl;
-		// compute TBR distance
-		if (COMPUTE_TBR_APPROX) {
-		cout << "a_TBR: " << tbr_high_lower_bound(F1, F2) << " <= d_TBR <= " << tbr_low_upper_bound(F1, F2) << endl;
-		}
-		if (COMPUTE_TBR) {
-			uforest *MAF1 = NULL;
-			uforest *MAF2 = NULL;
-			int distance = tbr_distance(F1, F2, false, &MAF1, &MAF2);
-			cout << "d_TBR = " << distance << endl;
-			if (MAF1 != NULL) {
-				cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
-				delete MAF1;
-			}
-			if (MAF2 != NULL) {
-				cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
-				delete MAF2;
-			}
-		}
-		int count;
-		if (PRINT_mAFS) {
-			count = tbr_print_mAFs(F1, F2);
-			cout << count << " mAFs" << endl;
-		}
-		else if (COUNT_mAFS) {
-			count = tbr_count_mAFs(F1, F2);
-			cout << count << " mAFs" << endl;
-		}
 
-		if (COMPUTE_REPLUG) {
-			uforest *MAF1 = NULL;
-			uforest *MAF2 = NULL;
-			int d_replug = replug_distance(F1, F2, false, &MAF1, &MAF2);
-			cout << "d_R = " << d_replug << endl;
-			if (MAF1 != NULL) {
-				cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
-				delete MAF1;
-			}
-			if (MAF2 != NULL) {
-				cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
-				delete MAF2;
-			}
-		}
+  //RJG - output file
+  ofstream TBR_out("TBR_out.txt", ios::out | ios::app);
+	TBR_out<<"Mean distances for: Bayesian,EW,IW\n\n";
 
-		if (COMPUTE_USPR) {
-			int d_uspr = uspr_distance(F1, F2);
-			cout << "d_USPR = " << d_uspr << endl;
-		}
+	if (TBR_out.is_open())
+	{
+ 		for (int run_number=0;run_number<2;run_number++)
+ 			{
+			string run_string =	std::to_string(run_number);
+			string EWfile_string=run_string+"_EW";
+			string MBfile_string=run_string+"_MB";
+			string IWfile_string=run_string+"_IW";
+			string simfile_string=run_string+"_sim";
 
+			//Read sim file for run
+			string readtree= "";
+			ifstream simfile (simfile_string);
+			if (simfile.is_open())
+				{
+					while ( getline (simfile,readtree) )
+					{
+						T1_line=readtree;
+						cout << "Read sim tree as:" << T1_line << '\n';
+					}
+					simfile.close();
+				}
+
+				//RJG - variables
+				int total_distance=0;
+				int tree_number=0;
+
+				//RJG Bayesian
+				ifstream MBfile (MBfile_string);
+				if (MBfile.is_open())
+				{
+					while (getline(MBfile, T2_line))
+					{
+							tree_number++;
+							cout<<"Calculating TBR for tree "<<tree_number<<"\n";
+
+							// load into data structures
+							uforest F1 = uforest(T1_line, &label_map, &reverse_label_map);
+							F1.normalize_order();
+							uforest F2 = uforest(T2_line, &label_map, &reverse_label_map);
+							F2.normalize_order();
+							cout << "T1: " << F1.str(false, &reverse_label_map) << endl;
+							cout << "T2: " << F2.str(false, &reverse_label_map) << endl;
+
+							// compute TBR distance
+							if (COMPUTE_TBR_APPROX) {
+							cout << "a_TBR: " << tbr_high_lower_bound(F1, F2) << " <= d_TBR <= " << tbr_low_upper_bound(F1, F2) << endl;
+							}
+
+							if (COMPUTE_TBR)
+							{
+								uforest *MAF1 = NULL;
+								uforest *MAF2 = NULL;
+								int distance = tbr_distance(F1, F2, false, &MAF1, &MAF2);
+								cout << "d_TBR = " << distance << endl;
+								total_distance+=distance;
+								/*
+								if (MAF1 != NULL) {
+									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
+									delete MAF1;
+								}
+								if (MAF2 != NULL) {
+									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
+									delete MAF2;
+								}
+								*/
+							}
+
+							int count;
+							if (PRINT_mAFS) {
+								count = tbr_print_mAFs(F1, F2);
+								cout << count << " mAFs" << endl;
+							}
+							else if (COUNT_mAFS) {
+								count = tbr_count_mAFs(F1, F2);
+								cout << count << " mAFs" << endl;
+							}
+
+							if (COMPUTE_REPLUG) {
+								uforest *MAF1 = NULL;
+								uforest *MAF2 = NULL;
+								int d_replug = replug_distance(F1, F2, false, &MAF1, &MAF2);
+								cout << "d_R = " << d_replug << endl;
+								if (MAF1 != NULL) {
+									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
+									delete MAF1;
+								}
+								if (MAF2 != NULL) {
+									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
+									delete MAF2;
+								}
+							}
+
+							if (COMPUTE_USPR) {
+								int d_uspr = uspr_distance(F1, F2);
+								cout << "d_USPR = " << d_uspr << endl;
+							}
+
+						}
+				MBfile.close();
+				}
+
+				double mean_distance=(double)total_distance/(double)tree_number;
+				TBR_out<< mean_distance;
+
+				//RJG Reset variables
+				mean_distance=0;
+				total_distance=0;
+				tree_number=0;
+
+				//RJG Equal weights
+				ifstream EWfile (EWfile_string);
+				if (EWfile.is_open())
+				{
+					while (getline(EWfile, T2_line))
+					{
+							tree_number++;
+							cout<<"Calculating TBR for tree "<<tree_number<<"\n";
+
+							// load into data structures
+							uforest F1 = uforest(T1_line, &label_map, &reverse_label_map);
+							F1.normalize_order();
+							uforest F2 = uforest(T2_line, &label_map, &reverse_label_map);
+							F2.normalize_order();
+							cout << "T1: " << F1.str(false, &reverse_label_map) << endl;
+							cout << "T2: " << F2.str(false, &reverse_label_map) << endl;
+
+							// compute TBR distance
+							if (COMPUTE_TBR_APPROX) {
+							cout << "a_TBR: " << tbr_high_lower_bound(F1, F2) << " <= d_TBR <= " << tbr_low_upper_bound(F1, F2) << endl;
+							}
+
+							if (COMPUTE_TBR)
+							{
+								uforest *MAF1 = NULL;
+								uforest *MAF2 = NULL;
+								int distance = tbr_distance(F1, F2, false, &MAF1, &MAF2);
+								cout << "d_TBR = " << distance << endl;
+								total_distance+=distance;
+
+								/*
+								if (MAF1 != NULL) {
+									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
+									delete MAF1;
+								}
+								if (MAF2 != NULL) {
+									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
+									delete MAF2;
+								}
+								*/
+							}
+
+							int count;
+							if (PRINT_mAFS) {
+								count = tbr_print_mAFs(F1, F2);
+								cout << count << " mAFs" << endl;
+							}
+							else if (COUNT_mAFS) {
+								count = tbr_count_mAFs(F1, F2);
+								cout << count << " mAFs" << endl;
+							}
+
+							if (COMPUTE_REPLUG) {
+								uforest *MAF1 = NULL;
+								uforest *MAF2 = NULL;
+								int d_replug = replug_distance(F1, F2, false, &MAF1, &MAF2);
+								cout << "d_R = " << d_replug << endl;
+								if (MAF1 != NULL) {
+									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
+									delete MAF1;
+								}
+								if (MAF2 != NULL) {
+									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
+									delete MAF2;
+								}
+							}
+
+							if (COMPUTE_USPR) {
+								int d_uspr = uspr_distance(F1, F2);
+								cout << "d_USPR = " << d_uspr << endl;
+							}
+
+						}
+				EWfile.close();
+				}
+
+				mean_distance=(double)total_distance/(double)tree_number;
+				TBR_out<<","<< mean_distance;
+
+				//RJG Reset variables
+				mean_distance=0;
+				total_distance=0;
+				tree_number=0;
+
+				//RJG Implied weights
+				ifstream IWfile (IWfile_string);
+				if (IWfile.is_open())
+				{
+					while (getline(IWfile, T2_line))
+					{
+							tree_number++;
+							cout<<"Calculating TBR for tree "<<tree_number<<"\n";
+
+							// load into data structures
+							uforest F1 = uforest(T1_line, &label_map, &reverse_label_map);
+							F1.normalize_order();
+							uforest F2 = uforest(T2_line, &label_map, &reverse_label_map);
+							F2.normalize_order();
+							cout << "T1: " << F1.str(false, &reverse_label_map) << endl;
+							cout << "T2: " << F2.str(false, &reverse_label_map) << endl;
+
+							// compute TBR distance
+							if (COMPUTE_TBR_APPROX) {
+							cout << "a_TBR: " << tbr_high_lower_bound(F1, F2) << " <= d_TBR <= " << tbr_low_upper_bound(F1, F2) << endl;
+							}
+
+							if (COMPUTE_TBR)
+							{
+								uforest *MAF1 = NULL;
+								uforest *MAF2 = NULL;
+								int distance = tbr_distance(F1, F2, false, &MAF1, &MAF2);
+								cout << "d_TBR = " << distance << endl;
+								total_distance+=distance;
+
+								/*
+								if (MAF1 != NULL) {
+									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
+									delete MAF1;
+								}
+								if (MAF2 != NULL) {
+									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
+									delete MAF2;
+								}
+								*/
+							}
+
+							int count;
+							if (PRINT_mAFS) {
+								count = tbr_print_mAFs(F1, F2);
+								cout << count << " mAFs" << endl;
+							}
+							else if (COUNT_mAFS) {
+								count = tbr_count_mAFs(F1, F2);
+								cout << count << " mAFs" << endl;
+							}
+
+							if (COMPUTE_REPLUG) {
+								uforest *MAF1 = NULL;
+								uforest *MAF2 = NULL;
+								int d_replug = replug_distance(F1, F2, false, &MAF1, &MAF2);
+								cout << "d_R = " << d_replug << endl;
+								if (MAF1 != NULL) {
+									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
+									delete MAF1;
+								}
+								if (MAF2 != NULL) {
+									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
+									delete MAF2;
+								}
+							}
+
+							if (COMPUTE_USPR) {
+								int d_uspr = uspr_distance(F1, F2);
+								cout << "d_USPR = " << d_uspr << endl;
+							}
+
+						}
+				IWfile.close();
+				}
+
+				mean_distance=(double)total_distance/(double)tree_number;
+				TBR_out<<","<< mean_distance<<"\n";
+
+			}
 	}
+
+
 }

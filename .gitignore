@@ -4,3 +4,4 @@ uspr_neighbors.exe
 uspr.exe
 *.swp
 test_trees/*.test_out
+boost/
