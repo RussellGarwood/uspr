@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
 
 	if (TBR_out.is_open())
 	{
- 		for (int run_number=0;run_number<2;run_number++)
+ 		for (int run_number=0;run_number<1000;run_number++)
  			{
 			string run_string =	std::to_string(run_number);
 			string EWfile_string=run_string+"_EW";
@@ -471,6 +471,7 @@ int main(int argc, char *argv[])
 
 				mean_distance=(double)total_distance/(double)tree_number;
 				TBR_out<<","<< mean_distance<<"\n";
+				TBR_out.flush();
 
 			}
 	}
