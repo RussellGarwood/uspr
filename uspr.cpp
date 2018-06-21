@@ -197,11 +197,13 @@ int main(int argc, char *argv[])
 
   //RJG - output file
   ofstream TBR_out("TBR_out.txt", ios::out | ios::app);
-	TBR_out<<"Mean distances for: Bayesian,EW,IW\n\n";
 
 	if (TBR_out.is_open())
 	{
- 		for (int run_number=0;run_number<1000;run_number++)
+		TBR_out<<"Mean distances for: Bayesian,EW,IW\n\n";
+
+		//RJG - Main loop opens all runs and does comparison
+		for (int run_number=0;run_number<1000;run_number++)
  			{
 			string run_string =	std::to_string(run_number);
 			string EWfile_string=run_string+"_EW";
@@ -228,6 +230,7 @@ int main(int argc, char *argv[])
 
 				//RJG Bayesian
 				ifstream MBfile (MBfile_string);
+
 				if (MBfile.is_open())
 				{
 					while (getline(MBfile, T2_line))
@@ -240,8 +243,8 @@ int main(int argc, char *argv[])
 							F1.normalize_order();
 							uforest F2 = uforest(T2_line, &label_map, &reverse_label_map);
 							F2.normalize_order();
-							cout << "T1: " << F1.str(false, &reverse_label_map) << endl;
-							cout << "T2: " << F2.str(false, &reverse_label_map) << endl;
+							//cout << "T1: " << F1.str(false, &reverse_label_map) << endl;
+							//cout << tbr_distance_hlpr tbr_distance_hlpr "T2: " << F2.str(false, &reverse_label_map) << endl;
 
 							// compute TBR distance
 							if (COMPUTE_TBR_APPROX) {
@@ -255,7 +258,7 @@ int main(int argc, char *argv[])
 								int distance = tbr_distance(F1, F2, false, &MAF1, &MAF2);
 								cout << "d_TBR = " << distance << endl;
 								total_distance+=distance;
-								/*
+
 								if (MAF1 != NULL) {
 									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
 									delete MAF1;
@@ -264,7 +267,7 @@ int main(int argc, char *argv[])
 									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
 									delete MAF2;
 								}
-								*/
+
 							}
 
 							int count;
@@ -339,7 +342,7 @@ int main(int argc, char *argv[])
 								cout << "d_TBR = " << distance << endl;
 								total_distance+=distance;
 
-								/*
+
 								if (MAF1 != NULL) {
 									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
 									delete MAF1;
@@ -348,7 +351,6 @@ int main(int argc, char *argv[])
 									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
 									delete MAF2;
 								}
-								*/
 							}
 
 							int count;
@@ -423,7 +425,7 @@ int main(int argc, char *argv[])
 								cout << "d_TBR = " << distance << endl;
 								total_distance+=distance;
 
-								/*
+
 								if (MAF1 != NULL) {
 									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
 									delete MAF1;
@@ -432,7 +434,6 @@ int main(int argc, char *argv[])
 									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
 									delete MAF2;
 								}
-								*/
 							}
 
 							int count;
