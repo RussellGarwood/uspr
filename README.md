@@ -9,6 +9,13 @@ If you are interested in comparing rooted trees in terms of SPR operations, you 
 
 This is the code for the preprint "Calculating the Unrooted Subtree-Prune-and-Regraft Distance" by Chris Whidden and Frederick A. Matsen IV. Please see "http://arxiv.org/abs/1511.07529" for more information on the motivation behind this project, the algorithms used and their expected performance.
 
+uspr version 1.0.1 - Fork
+====
+
+This is a fork of the software by Russell Garwood, modified to measure spr and tbr distances between the true tree of simulation studies, and the trees recovered by parsimony and Bayesian phylogenetic inference. All the smart stuff was created by Chris Whidden and Frederick A. Matsen IV, who have generously released this code under a GNU General Public License. Thanks, both, for this fantastic tool. This fork is structured as follows:
+-- master branch - measures distances between true tree, and the pool of trees created by a Bayesian MCMC stationary distribution from MrBayes
+-- MCC branch - measures the distance from the true tree to the maximum crade credibility tree from MrBayes MCMC runs. 
+
 Copying
 ====
 ```
@@ -94,7 +101,7 @@ Basic options
 --uspr                 By default, uspr will compute all 4 distances. If any of these
                        options are specified then uspr will compute only the specified
                        distances.
-                       
+
 --print-mAFs           Print all maximal agreement forests found during execution of
                        the program.
 --count-mAFs           Count all maximal agreement forests found during execution of
@@ -107,7 +114,7 @@ Algorithm Options
 --no-replug-estimate   Disable the TBR approximation, TBR distance, or replug distance
                        heuristics when computing the SPR distance. In most cases these
                        options will greatly increase the time required by uspr.
-                       
+
 --no-opt
 --no-protect-b         Disable all MAF optimizations or just the edge protection
                        optimization for enumerating agreement forests. In most
