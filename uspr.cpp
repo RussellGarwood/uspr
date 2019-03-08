@@ -196,11 +196,11 @@ int main(int argc, char *argv[])
 	string T2_line = "";
 
   //RJG - output file
-  ofstream TBR_out("TBR_out.txt", ios::out | ios::app);
+  ofstream TBR_out("TBR_out_MCC.txt", ios::out | ios::app);
 
 	if (TBR_out.is_open())
 	{
-		TBR_out<<"Mean distances for: Bayesian,EW,IW\n\n";
+		TBR_out<<"Char number, Batch number, Tree number, TBR\n\n";
 
 		//RJG - Main loop opens all runs and does comparison
 		for (int run_number=0;run_number<1000;run_number++)
