@@ -205,25 +205,34 @@ int main(int argc, char *argv[])
 		{
 			if(character_number==128 || character_number==512 || character_number==1024)
 			{
-				cout<<character_number<<"\n\nTEST__";
 					//RJG - Main loop opens all runs and does comparison
-					/*for (int run_number=0;run_number<1000;run_number++)
+					//RJG NOTE - Changed to loop only to 10 for testing. 
+					for (int run_number=0;run_number<1;run_number++)
 			 			{
+						string character_string = std::to_string(character_number);	 
 						string run_string =	std::to_string(run_number);
-						string EWfile_string=run_string+"_EW";
-						string MBfile_string=run_string+"_MB";
-						string IWfile_string=run_string+"_IW";
-						string simfile_string=run_string+"_sim";
-
-						//Read sim file for run
+						
+						string simfile_string = "Sim_data/MBL2017/" +character_string + "/" + run_string + "_sim.nex";
+						string MCC_string = "Sim_data/MBL2017/" + character_string + "/" + run_string + ".MCC.nex";
+						
+						cout<<"Calculating distances for "<<character_number<<" characters, and ";
+						cout << "run # "<<run_number<<"\n";
+						
+						//Read files for run - first sim
 						string readtree= "";
+						cout<<simfile_string<<"\n";
+
 						ifstream simfile (simfile_string);
 						if (simfile.is_open())
 							{
 								while ( getline (simfile,readtree) )
 								{
 									T1_line=readtree;
-									cout << "Read sim tree as:" << T1_line << '\n';
+
+									if(T1_line.find("&U")!=string::npos)
+										{
+										cout<<T1_line;
+										}
 								}
 								simfile.close();
 							}
@@ -231,7 +240,7 @@ int main(int argc, char *argv[])
 							//RJG - variables
 							int total_distance=0;
 							int tree_number=0;
-
+							/*
 							//RJG Bayesian
 							ifstream MBfile (MBfile_string);
 
@@ -473,12 +482,12 @@ int main(int argc, char *argv[])
 									}
 							IWfile.close();
 							}
-
-							mean_distance=(double)total_distance/(double)tree_number;
-							TBR_out<<","<< mean_distance<<"\n";
+							*/
+							
+							TBR_out<<"DONE\n";
 							TBR_out.flush();
 
-						}*/
+						}
 			}
 	}
 }
