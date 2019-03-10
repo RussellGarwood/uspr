@@ -1,6 +1,6 @@
 CC=g++
 CC64=CC
-CFLAGS=-O2 -march=native -std=c++0x -D_hypot=hypot
+CFLAGS=-O2 -march=native -std=c++0x -D_hypot=hypot -g
 OMPFLAGS=-fopenmp
 C64FLAGS=$(CFLAGS)
 BOOST_GRAPH=-Ilibs/boost/graph/include

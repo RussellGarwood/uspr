@@ -195,8 +195,8 @@ int main(int argc, char *argv[])
 	string T1_line = "";
 	string T2_line = "";
 
-  //RJG - output file - for development place one folder up so as not to get it into the git repository with every push
-  ofstream TBR_out("../TBR_out_MCC.txt", ios::out | ios::app);
+	//RJG - output file - for development place one folder up so as not to get it into the git repository with every push
+	ofstream TBR_out("../TBR_out_MCC.txt", ios::out | ios::app);
 
 	if (TBR_out.is_open())
 	{
@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
 							F1.normalize_order();
 							uforest F2 = uforest(T2_line, &label_map, &reverse_label_map);
 							F2.normalize_order();
-						
+
 							// compute TBR distance
 							if (COMPUTE_TBR_APPROX) 
 							{
@@ -321,7 +321,7 @@ int main(int argc, char *argv[])
 								int d_uspr = uspr_distance(F1, F2);
 								cout << "d_USPR = " << d_uspr << endl;
 							}
-							
+
 							TBR_out<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							cout<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							TBR_out.flush();
