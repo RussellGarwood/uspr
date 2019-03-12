@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
 									if(T1_line_temp.find("&U")!=string::npos)
 										{
 										T1_line = T1_line_temp.substr(T1_line_temp.find("("));
-										T1_line.erase(T1_line.length()-1);
+										//T1_line.erase(T1_line.length()-1);
 										cout<<"Sim tree: "<<T1_line<<"\n";
 										}
 								}
@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
 									if(T2_line_temp.find("&U")!=string::npos)
 										{
 										T2_line = T2_line_temp.substr(T2_line_temp.find("("));
-										T2_line.erase(T2_line.length()-1);
+										//T2_line.erase(T2_line.length()-1);
 										cout<<"MCC tree: "<<T2_line<<"\n";
 										}
 								}
@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
 
 							//RJG - variables
 							int TBR=-1;
-
+							
 							// load into data structures
 							uforest F1 = uforest(T1_line, &label_map, &reverse_label_map);
 							F1.normalize_order();
@@ -321,7 +321,6 @@ int main(int argc, char *argv[])
 								int d_uspr = uspr_distance(F1, F2);
 								cout << "d_USPR = " << d_uspr << endl;
 							}
-
 							TBR_out<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							cout<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							TBR_out.flush();
