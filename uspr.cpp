@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
 									if(T1_line_temp.find("&U")!=string::npos)
 										{
 										T1_line = T1_line_temp.substr(T1_line_temp.find("("));
-										//T1_line.erase(T1_line.length()-1);
+										strip_branchlengths(T1_line);
 										cout<<"Sim tree: "<<T1_line<<"\n";
 										}
 								}
@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
 									if(T2_line_temp.find("&U")!=string::npos)
 										{
 										T2_line = T2_line_temp.substr(T2_line_temp.find("("));
-										//T2_line.erase(T2_line.length()-1);
+										strip_branchlengths(T2_line);
 										cout<<"MCC tree: "<<T2_line<<"\n";
 										}
 								}
@@ -264,12 +264,14 @@ int main(int argc, char *argv[])
 							uforest F2 = uforest(T2_line, &label_map, &reverse_label_map);
 							F2.normalize_order();
 
+							/*
+
 							// compute TBR distance
 							if (COMPUTE_TBR_APPROX) 
 							{
 							cout << "a_TBR: " << tbr_high_lower_bound(F1, F2) << " <= d_TBR <= " << tbr_low_upper_bound(F1, F2) << endl;
 							}
-
+							*/
 							if (COMPUTE_TBR)
 							{
 								uforest *MAF1 = NULL;
@@ -289,6 +291,7 @@ int main(int argc, char *argv[])
 
 							}
 
+							/*
 							int count;
 							if (PRINT_mAFS) 
 							{
@@ -321,6 +324,7 @@ int main(int argc, char *argv[])
 								int d_uspr = uspr_distance(F1, F2);
 								cout << "d_USPR = " << d_uspr << endl;
 							}
+							*/
 							TBR_out<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							cout<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							TBR_out.flush();

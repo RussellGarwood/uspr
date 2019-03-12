@@ -116,8 +116,18 @@ bool operator <= (tree_distance a, tree_distance b) {
 
 // function prototypes
 int uspr_distance(uforest &T1, uforest &T2);
+void strip_branchlengths(string & newick_string);
 
 // functions
+void strip_branchlengths(string & newick_string)
+{
+for (int i=newick_string.length();i>0;i--)
+	{
+		if (newick_string[i]==':')
+			while ( newick_string[i]!=',' && newick_string[i]!=')')newick_string.erase(i,1);
+	}
+}
+
 int uspr_distance(uforest &T1_original, uforest &T2_original) {
 
 	uforest T1 = uforest(T1_original);
