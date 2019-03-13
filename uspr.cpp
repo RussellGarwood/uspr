@@ -196,11 +196,10 @@ int main(int argc, char *argv[])
 	string T2_line = "";
 
 	//RJG - output file - for development place one folder up so as not to get it into the git repository with every push
-	ofstream TBR_out("../TBR_out_MCC.txt", ios::out | ios::app);
+	ofstream TBR_out("../TBR_out_MCC_MBL.txt", ios::out | ios::app);
 
 	if (TBR_out.is_open())
 	{
-		TBR_out<<"MBL distances\n";
 		TBR_out<<"Char number, Batch number, Tree number, TBR\n";
 		for (int character_number=0;character_number<2000;character_number++)
 		{
@@ -208,7 +207,7 @@ int main(int argc, char *argv[])
 			{
 					//RJG - Main loop opens all runs and does comparison
 					//RJG NOTE - Changed to loop only to 10 for testing. 
-					for (int run_number=0;run_number<1;run_number++)
+					for (int run_number=0;run_number<1000;run_number++)
 			 			{
 						string character_string = std::to_string(character_number);	 
 						string run_string =	std::to_string(run_number);
@@ -232,7 +231,8 @@ int main(int argc, char *argv[])
 									if(T1_line_temp.find("&U")!=string::npos)
 										{
 										T1_line = T1_line_temp.substr(T1_line_temp.find("("));
-										strip_branchlengths(T1_line);
+										
+										//T1_line.erase(T1_line.length()-1);
 										cout<<"Sim tree: "<<T1_line<<"\n";
 										}
 								}
@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
 									if(T2_line_temp.find("&U")!=string::npos)
 										{
 										T2_line = T2_line_temp.substr(T2_line_temp.find("("));
-										strip_branchlengths(T2_line);
+										//T2_line.erase(T2_line.length()-1);
 										cout<<"MCC tree: "<<T2_line<<"\n";
 										}
 								}
@@ -265,14 +265,12 @@ int main(int argc, char *argv[])
 							uforest F2 = uforest(T2_line, &label_map, &reverse_label_map);
 							F2.normalize_order();
 
-							/*
-
 							// compute TBR distance
 							if (COMPUTE_TBR_APPROX) 
 							{
 							cout << "a_TBR: " << tbr_high_lower_bound(F1, F2) << " <= d_TBR <= " << tbr_low_upper_bound(F1, F2) << endl;
 							}
-							*/
+
 							if (COMPUTE_TBR)
 							{
 								uforest *MAF1 = NULL;
@@ -292,7 +290,6 @@ int main(int argc, char *argv[])
 
 							}
 
-							/*
 							int count;
 							if (PRINT_mAFS) 
 							{
@@ -325,8 +322,6 @@ int main(int argc, char *argv[])
 								int d_uspr = uspr_distance(F1, F2);
 								cout << "d_USPR = " << d_uspr << endl;
 							}
-							*/
-
 							TBR_out<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							cout<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							TBR_out.flush();
