@@ -207,15 +207,17 @@ int main(int argc, char *argv[])
 			if(character_number==128 || character_number==512 || character_number==1024)
 			{
 					//RJG - Main loop opens all runs and does comparison
-					//RJG NOTE - Changed to loop only to 10 for testing. 
-					for (int run_number=0;run_number<1;run_number++)
+					for (int batch_number=1;batch_number<6;batch_number++)
+						for (int run_number=0;run_number<1;run_number++)
 			 			{
 						string character_string = std::to_string(character_number);	 
 						string run_string =	std::to_string(run_number);
-						
-						string simfile_string = "Sim_data/MBL2017/" +character_string + "/" + run_string + "_sim.nex";
+						string batch_string = std::to_string(batch_number);
+
+						string simfile_string = "Sim_data/TREvoSim/" +character_string + "/b" + batch_string + "/" + run_string + "_sim.nex";
 						string MCC_string = "Sim_data/MBL2017/" + character_string + "/" + run_string + ".MCC.nex";
-						
+						cout<<simfile_string<<"\n";
+
 						cout<<"\n\nCalculating distances for "<<character_number<<" characters, and ";
 						cout << "run # "<<run_number<<"\n";
 						
@@ -223,8 +225,10 @@ int main(int argc, char *argv[])
 						string readtree= "";
 
 						ifstream simfile (simfile_string);
+						cout << "Woop";
 						if (simfile.is_open())
 							{
+								cout << "Here";
 								while ( getline (simfile,readtree) )
 								{
 									string T1_line_temp=readtree;
@@ -258,7 +262,7 @@ int main(int argc, char *argv[])
 
 							//RJG - variables
 							int TBR=-1;
-							
+							return 0;
 							// load into data structures
 							uforest F1 = uforest(T1_line, &label_map, &reverse_label_map);
 							F1.normalize_order();
@@ -273,6 +277,7 @@ int main(int argc, char *argv[])
 							cout << "a_TBR: " << tbr_high_lower_bound(F1, F2) << " <= d_TBR <= " << tbr_low_upper_bound(F1, F2) << endl;
 							}
 							*/
+
 							if (COMPUTE_TBR)
 							{
 								uforest *MAF1 = NULL;
