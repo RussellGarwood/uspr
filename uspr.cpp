@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
 
 	if (TBR_out.is_open())
 	{
-		TBR_out<<"MBL distances\n";
+		TBR_out<<"TREvoSim distances\n";
 		TBR_out<<"Char number, Batch number, Tree number, TBR\n";
 		for (int character_number=0;character_number<2000;character_number++)
 		{
