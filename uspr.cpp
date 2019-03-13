@@ -200,7 +200,8 @@ int main(int argc, char *argv[])
 
 	if (TBR_out.is_open())
 	{
-		TBR_out<<"Char number, Batch number, Tree number, TBR\n\n";
+		TBR_out<<"MBL distances\n";
+		TBR_out<<"Char number, Batch number, Tree number, TBR\n";
 		for (int character_number=0;character_number<2000;character_number++)
 		{
 			if(character_number==128 || character_number==512 || character_number==1024)
@@ -325,6 +326,7 @@ int main(int argc, char *argv[])
 								cout << "d_USPR = " << d_uspr << endl;
 							}
 							*/
+
 							TBR_out<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							cout<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							TBR_out.flush();
