@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
 	string T2_line = "";
 
 	//RJG - output file - for development place one folder up so as not to get it into the git repository with every push
-	ofstream TBR_out("../TBR_out_MCC.txt", ios::out | ios::app);
+	ofstream TBR_out("../TBR_out_MCC_TREvoSim.txt", ios::out | ios::app);
 
 	if (TBR_out.is_open())
 	{
@@ -216,19 +216,17 @@ int main(int argc, char *argv[])
 
 						string simfile_string = "Sim_data/TREvoSim/" +character_string + "/b" + batch_string + "/" + run_string + "_sim.nex";
 						string MCC_string = "Sim_data/MBL2017/" + character_string + "/" + run_string + ".MCC.nex";
-						cout<<simfile_string<<"\n";
 
-						cout<<"\n\nCalculating distances for "<<character_number<<" characters, and ";
-						cout << "run # "<<run_number<<"\n";
+						cout<<"\n\nCalculating distances for "<<character_number<<" characters, and run # "<<run_number<<"\n";
 						
 						//Read files for run - first sim
 						string readtree= "";
 
 						ifstream simfile (simfile_string);
-						cout << "Woop";
+
 						if (simfile.is_open())
 							{
-								cout << "Here";
+								
 								while ( getline (simfile,readtree) )
 								{
 									string T1_line_temp=readtree;
@@ -262,7 +260,7 @@ int main(int argc, char *argv[])
 
 							//RJG - variables
 							int TBR=-1;
-							return 0;
+
 							// load into data structures
 							uforest F1 = uforest(T1_line, &label_map, &reverse_label_map);
 							F1.normalize_order();
@@ -333,9 +331,10 @@ int main(int argc, char *argv[])
 							*/
 
 							TBR_out<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
-							cout<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 							TBR_out.flush();
 
+							cout<<"Char number, Batch number, Tree number, TBR\n";
+							cout<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
 						}
 			}
 		}

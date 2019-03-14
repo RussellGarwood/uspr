@@ -124,7 +124,7 @@ void strip_branchlengths(string & newick_string)
 for (int i=newick_string.length();i>0;i--)
 	{
 		if (newick_string[i]==':')
-			while ( newick_string[i]!=',' && newick_string[i]!=')')newick_string.erase(i,1);
+			while ( newick_string[i]!=',' && newick_string[i]!=')' && i !=newick_string.size() ) newick_string.erase(i,1);
 	}
 }
 
