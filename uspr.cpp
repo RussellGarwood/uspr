@@ -330,11 +330,11 @@ int main(int argc, char *argv[])
 							}
 							*/
 
-							TBR_out<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
+							TBR_out<<character_number<<" "<<batch_number<<" "<<run_number<<","<<TBR<<endl;
 							TBR_out.flush();
 
 							cout<<"Char number, Batch number, Tree number, TBR\n";
-							cout<<character_number<<",1,"<<run_number<<","<<TBR<<endl;
+							cout<<character_number<<" "<<batch_number<<" "<<run_number<<","<<TBR<<endl;
 						}
 			}
 		}
