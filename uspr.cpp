@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
 			{
 					//RJG - Main loop opens all runs and does comparison
 					//RJG NOTE - Changed to loop only to 10 for testing. 
-					for (int run_number=0;run_number<1;run_number++)
+					for (int run_number=0;run_number<1000;run_number++)
 			 			{
 						string character_string = std::to_string(character_number);	 
 						string run_string =	std::to_string(run_number);
