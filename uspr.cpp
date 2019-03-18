@@ -208,14 +208,14 @@ int main(int argc, char *argv[])
 			{
 					//RJG - Main loop opens all runs and does comparison
 					for (int batch_number=1;batch_number<6;batch_number++)
-						for (int run_number=0;run_number<1000;run_number++)
+						for (int run_number=0;run_number<200;run_number++)
 			 			{
 						string character_string = std::to_string(character_number);	 
 						string run_string =	std::to_string(run_number);
 						string batch_string = std::to_string(batch_number);
 
 						string simfile_string = "Sim_data/TREvoSim/" +character_string + "/b" + batch_string + "/" + run_string + "_sim.nex";
-						string MCC_string = "Sim_data/MBL2017/" + character_string + "/" + run_string + ".MCC.nex";
+						string MCC_string = "Sim_data/TREvoSim/" + character_string + "/b" + batch_string + "/" + run_string + ".MCC.nex";
 
 						cout<<"\n\nCalculating distances for "<<character_number<<" characters, and run # "<<run_number<<"\n";
 						
