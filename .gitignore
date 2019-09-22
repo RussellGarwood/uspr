@@ -5,3 +5,5 @@ uspr.exe
 *.swp
 test_trees/*.test_out
 boost/
+Sim_data/
+.vscode/

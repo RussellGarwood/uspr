@@ -40,6 +40,7 @@ along with uspr.  If not, see <http://www.gnu.org/licenses/>.
 #include <memory>
 #include <ctime>
 #include <cstdlib>
+
 #include "utree.h"
 #include "unode.h"
 #include "uforest.h"
@@ -48,6 +49,12 @@ along with uspr.  If not, see <http://www.gnu.org/licenses/>.
 
 //RJG - read files
 #include <fstream>
+//RJG - deal with directories
+#include <dirent.h>
+#include <errno.h>
+//RJG - string manipulation
+#include <iomanip>
+#include <sstream>
 
 using namespace std;
 
@@ -196,23 +203,40 @@ int main(int argc, char *argv[])
 	string T2_line = "";
 
   //RJG - output file
-  ofstream TBR_out("TBR_out.txt", ios::out | ios::app);
-
-	if (TBR_out.is_open())
+  ofstream TBR_out("Sim_data/TBR_out.txt", ios::out | ios::app);
+  if (TBR_out.is_open())
 	{
-		TBR_out<<"Mean distances for: Bayesian,EW,IW\n\n";
+		cout<<"Starting USPR\n\n";
+		TBR_out<<"Mean distances for: EW for different character numbers\n\n";
+
+		for (int char_number=100;char_number<1000;char_number++)
+ 		{
+		string char_string = std::to_string(char_number);
+		char_string.insert(0,"./Sim_data/32_terminals_no_selection/TREvoSim_");
+		char_string.append("_characters");
+
+		//ifstream testfile (string(char_string + "/TREvoSim_output/TREvoSim_tree_000.nex"));
+		//if (testfile.is_open())cout<<char_string<<"\n";
+
+		DIR* dir = opendir(char_string.c_str());
+		if(!dir) continue;
+
+		cout<<"Working on folder"<<char_string<<"\n\n";
 
 		//RJG - Main loop opens all runs and does comparison
-		for (int run_number=0;run_number<1000;run_number++)
+			for (int run_number=0;run_number<1000;run_number++)
  			{
 			string run_string =	std::to_string(run_number);
-			string EWfile_string=run_string+"_EW";
-			string MBfile_string=run_string+"_MB";
-			string IWfile_string=run_string+"_IW";
-			string simfile_string=run_string+"_sim";
+			//RJG - String with zero padding
+			stringstream run_number_pad; 
+			run_number_pad << setw(4) << std::setfill('0') << run_number;
+
+			//RJG file strings within each folder
+			string EWfile_string=string(char_string + "/TREvoSim_output/tnt/" + run_string +"_POUT.nex");
+			string simfile_string=string(char_string + "/TREvoSim_output/TREvoSim_tree_" + run_number_pad.str() +".nex");
 
 			//Read sim file for run
-			string readtree= "";
+			string readtree="";
 			ifstream simfile (simfile_string);
 			if (simfile.is_open())
 				{
@@ -226,8 +250,10 @@ int main(int argc, char *argv[])
 
 				//RJG - variables
 				int total_distance=0;
-				int tree_number=0;
+				int tree_number=0; 
+				double mean_distance=0.; 
 
+				/*
 				//RJG Bayesian
 				ifstream MBfile (MBfile_string);
 
@@ -311,8 +337,10 @@ int main(int argc, char *argv[])
 				mean_distance=0;
 				total_distance=0;
 				tree_number=0;
+				*/
 
 				//RJG Equal weights
+
 				ifstream EWfile (EWfile_string);
 				if (EWfile.is_open())
 				{
@@ -396,6 +424,7 @@ int main(int argc, char *argv[])
 				tree_number=0;
 
 				//RJG Implied weights
+				/*
 				ifstream IWfile (IWfile_string);
 				if (IWfile.is_open())
 				{
@@ -468,14 +497,20 @@ int main(int argc, char *argv[])
 
 						}
 				IWfile.close();
-				}
+				}*/
 
 				mean_distance=(double)total_distance/(double)tree_number;
 				TBR_out<<","<< mean_distance<<"\n";
 				TBR_out.flush();
-
 			}
+	
+	
+		
+		}
+	
 	}
+	
 
 
+TBR_out.close();
 }
