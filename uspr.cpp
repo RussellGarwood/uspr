@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
 			string run_string =	std::to_string(run_number);
 			//RJG - String with zero padding
 			stringstream run_number_pad; 
-			run_number_pad << setw(4) << std::setfill('0') << run_number;
+			run_number_pad << setw(3) << std::setfill('0') << run_number;
 
 			//RJG file strings within each folder
 			string EWfile_string=string(char_string + "/TREvoSim_output/tnt/" + run_string +"_POUT.nex");
@@ -238,13 +238,20 @@ int main(int argc, char *argv[])
 			//Read sim file for run
 			string readtree="";
 			ifstream simfile (simfile_string);
+	
 			if (simfile.is_open())
 				{
 					while ( getline (simfile,readtree) )
 					{
-						T1_line=readtree;
-						cout << "Read sim tree as:" << T1_line << '\n';
+						string temp=readtree;
+						if(temp.find("[&U]")!=string::npos) T1_line=readtree;
 					}
+					int tree_start = T1_line.rfind("]");
+					T1_line.erase(0,tree_start+1);
+					T1_line.pop_back();
+					cout << "Read sim tree as:" << T1_line << '\n';
+					
+
 					simfile.close();
 				}
 
