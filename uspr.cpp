@@ -71,302 +71,311 @@ bool COMPUTE_TBR = false;
 bool COMPUTE_REPLUG = false;
 bool COMPUTE_USPR = false;
 string USAGE =
-"uspr, version 1.0.1\n"
-"\n"
-"usage: uspr [OPTIONS]\n"
-"Calculate the subtree prune and regraft (uSPR) distance and related distances\n"
-"between pairs of unrooted binary tres from STDIN. Input one tree in newick\n"
-"format per line. Supports arbitrary labels. See the README for more\n"
-"information.\n"
-"\n"
-"Copyright 2018 Chris Whidden\n"
-"cwhidden@fredhutch.org\n"
-"https://github.com/cwhidden/uspr\n"
-"May 1, 2018\n"
-"Version 1.0.1\n"
-"\n"
-"This program comes with ABSOLUTELY NO WARRANTY.\n"
-"This is free software, and you are welcome to redistribute it\n"
-"under certain conditions; See the README for details.\n"
-"\n"
-"Basic options\n"
-"\n"
-"-h --help              Print program information and exit.\n"
-"\n"
-"--tbr-approx\n"
-"--tbr\n"
-"--replug\n"
-"--uspr                 By default, uspr will compute all 4 distances. If any of these\n"
-"                       options are specified then uspr will compute only the specified\n"
-"                       distances.\n"
-"                       \n"
-"--print-mAFs           Print all maximal agreement forests found during execution of\n"
-"                       the program.\n"
-"--count-mAFs           Count all maximal agreement forests found during execution of\n"
-"                       the program.\n"
-"\n"
-"Algorithm Options\n"
-"\n"
-"--no-approx-estimate\n"
-"--no-tbr-estimate\n"
-"--no-replug-estimate   Disable the TBR approximation, TBR distance, or replug distance\n"
-"                       heuristics when computing the SPR distance. In most cases these\n"
-"                       options will greatly increase the time required by uspr.\n"
-"                       \n"
-"--no-opt\n"
-"--no-protect-b         Disable all MAF optimizations or just the edge protection\n"
-"                       optimization for enumerating agreement forests. In most\n"
-"                       cases these options will greatly increase the time required\n"
-"                       by uspr.\n"
-"\n";
+    "uspr, version 1.0.1\n"
+    "\n"
+    "usage: uspr [OPTIONS]\n"
+    "Calculate the subtree prune and regraft (uSPR) distance and related distances\n"
+    "between pairs of unrooted binary tres from STDIN. Input one tree in newick\n"
+    "format per line. Supports arbitrary labels. See the README for more\n"
+    "information.\n"
+    "\n"
+    "Copyright 2018 Chris Whidden\n"
+    "cwhidden@fredhutch.org\n"
+    "https://github.com/cwhidden/uspr\n"
+    "May 1, 2018\n"
+    "Version 1.0.1\n"
+    "\n"
+    "This program comes with ABSOLUTELY NO WARRANTY.\n"
+    "This is free software, and you are welcome to redistribute it\n"
+    "under certain conditions; See the README for details.\n"
+    "\n"
+    "Basic options\n"
+    "\n"
+    "-h --help              Print program information and exit.\n"
+    "\n"
+    "--tbr-approx\n"
+    "--tbr\n"
+    "--replug\n"
+    "--uspr                 By default, uspr will compute all 4 distances. If any of these\n"
+    "                       options are specified then uspr will compute only the specified\n"
+    "                       distances.\n"
+    "                       \n"
+    "--print-mAFs           Print all maximal agreement forests found during execution of\n"
+    "                       the program.\n"
+    "--count-mAFs           Count all maximal agreement forests found during execution of\n"
+    "                       the program.\n"
+    "\n"
+    "Algorithm Options\n"
+    "\n"
+    "--no-approx-estimate\n"
+    "--no-tbr-estimate\n"
+    "--no-replug-estimate   Disable the TBR approximation, TBR distance, or replug distance\n"
+    "                       heuristics when computing the SPR distance. In most cases these\n"
+    "                       options will greatly increase the time required by uspr.\n"
+    "                       \n"
+    "--no-opt\n"
+    "--no-protect-b         Disable all MAF optimizations or just the edge protection\n"
+    "                       optimization for enumerating agreement forests. In most\n"
+    "                       cases these options will greatly increase the time required\n"
+    "                       by uspr.\n"
+    "\n";
 
 
 // function prototypes
 int main(int argc, char *argv[])
 {
-	int max_args = argc-1;
-	while (argc > 1) {
-		char *arg = argv[--argc];
-		if (strcmp(arg, "--print-mAFs") == 0) {
-			PRINT_mAFS = true;
-		}
-		if (strcmp(arg, "--count-mAFs") == 0) {
-			COUNT_mAFS = true;
-		}
-		else if (strcmp(arg, "--keep-labels") == 0) {
-			KEEP_LABELS = true;
-				cout << "KEEP_LABELS=true" << endl;
-		}
-		else if (strcmp(arg, "--no-opt") == 0) {
-			DEFAULT_OPTIMIZATIONS = false;
-		}
-		else if (strcmp(arg, "--no-protect-b") == 0) {
-			OPTIMIZE_PROTECT_B = false;
-		}
-		else if (strcmp(arg, "--tbr-approx") == 0) {
-			COMPUTE_TBR_APPROX = true;
-			ALL_DISTANCES = false;
-		}
-		else if (strcmp(arg, "--tbr") == 0) {
-			COMPUTE_TBR = true;
-			ALL_DISTANCES = false;
-		}
-		else if (strcmp(arg, "--replug") == 0) {
-			COMPUTE_REPLUG = true;
-			ALL_DISTANCES = false;
-		}
-		else if (strcmp(arg, "--uspr") == 0) {
-			COMPUTE_USPR = true;
-			ALL_DISTANCES = false;
-		}
-		else if (strcmp(arg, "--no-approx-estimate") == 0) {
-			USE_TBR_APPROX_ESTIMATE = false;
-		}
-		else if (strcmp(arg, "--no-tbr-estimate") == 0) {
-			USE_TBR_ESTIMATE = false;
-		}
-		else if (strcmp(arg, "--no-replug-estimate") == 0) {
-			USE_REPLUG_ESTIMATE = false;
-		}
-		else if (strcmp(arg, "--help") == 0 ||
-				strcmp(arg, "-h") == 0 ||
-				strcmp(arg, "-help") == 0) {
-			cout << USAGE;
-			return 0;
-		}
-	}
+    int max_args = argc - 1;
+    while (argc > 1)
+    {
+        char *arg = argv[--argc];
+        if (strcmp(arg, "--print-mAFs") == 0)
+        {
+            PRINT_mAFS = true;
+        }
+        if (strcmp(arg, "--count-mAFs") == 0)
+        {
+            COUNT_mAFS = true;
+        }
+        else if (strcmp(arg, "--keep-labels") == 0)
+        {
+            KEEP_LABELS = true;
+            cout << "KEEP_LABELS=true" << endl;
+        }
+        else if (strcmp(arg, "--no-opt") == 0)
+        {
+            DEFAULT_OPTIMIZATIONS = false;
+        }
+        else if (strcmp(arg, "--no-protect-b") == 0)
+        {
+            OPTIMIZE_PROTECT_B = false;
+        }
+        else if (strcmp(arg, "--tbr-approx") == 0)
+        {
+            COMPUTE_TBR_APPROX = true;
+            ALL_DISTANCES = false;
+        }
+        else if (strcmp(arg, "--tbr") == 0)
+        {
+            COMPUTE_TBR = true;
+            ALL_DISTANCES = false;
+        }
+        else if (strcmp(arg, "--replug") == 0)
+        {
+            COMPUTE_REPLUG = true;
+            ALL_DISTANCES = false;
+        }
+        else if (strcmp(arg, "--uspr") == 0)
+        {
+            COMPUTE_USPR = true;
+            ALL_DISTANCES = false;
+        }
+        else if (strcmp(arg, "--no-approx-estimate") == 0)
+        {
+            USE_TBR_APPROX_ESTIMATE = false;
+        }
+        else if (strcmp(arg, "--no-tbr-estimate") == 0)
+        {
+            USE_TBR_ESTIMATE = false;
+        }
+        else if (strcmp(arg, "--no-replug-estimate") == 0)
+        {
+            USE_REPLUG_ESTIMATE = false;
+        }
+        else if (strcmp(arg, "--help") == 0 ||
+                 strcmp(arg, "-h") == 0 ||
+                 strcmp(arg, "-help") == 0)
+        {
+            cout << USAGE;
+            return 0;
+        }
+    }
 
-	if (DEFAULT_OPTIMIZATIONS == false) {
-		OPTIMIZE_2B = false;
-		OPTIMIZE_PROTECT_A = false;
-		OPTIMIZE_PROTECT_B = false;
-		OPTIMIZE_BRANCH_AND_BOUND = false;
-		cout << "NO OPTIMIZATIONS" << endl;
-	}
+    if (DEFAULT_OPTIMIZATIONS == false)
+    {
+        OPTIMIZE_2B = false;
+        OPTIMIZE_PROTECT_A = false;
+        OPTIMIZE_PROTECT_B = false;
+        OPTIMIZE_BRANCH_AND_BOUND = false;
+        cout << "NO OPTIMIZATIONS" << endl;
+    }
 
-	if (ALL_DISTANCES) {
-		COMPUTE_TBR_APPROX = true;
-		COMPUTE_TBR = true;
-		COMPUTE_REPLUG = true;
-		COMPUTE_USPR = true;
-	}
+    if (ALL_DISTANCES)
+    {
+        COMPUTE_TBR_APPROX = true;
+        COMPUTE_TBR = true;
+        COMPUTE_REPLUG = true;
+        COMPUTE_USPR = true;
+    }
 
-	// label maps to allow string labels
-	map<string, int> label_map= map<string, int>();
-	map<int, string> reverse_label_map = map<int, string>();
+    // label maps to allow string labels
+    map<string, int> label_map = map<string, int>();
+    map<int, string> reverse_label_map = map<int, string>();
 
-	// set random seed
-	srand(unsigned(time(0)));
+    // set random seed
+    srand(unsigned(time(0)));
 
-	// RJG read tree from sim file
-	string T1_line = "";
-	string T2_line = "";
+    // RJG read tree from sim file
+    string T1_line = "";
+    string T2_line = "";
 
-  //RJG - output file
-  ofstream TBR_out("Sim_data/TBR_out.txt", ios::out | ios::app);
-  if (TBR_out.is_open())
-	{
-		cout<<"Starting USPR\n\n";
-		TBR_out<<"Mean distances for: EW for different character numbers\n\n";
+    //RJG - output file
+    ofstream TBR_out("Sim_data/TBR_out.txt", ios::out | ios::app);
+    if (!TBR_out.is_open())return 0;
 
-		for (int char_number=100;char_number<1000;char_number++)
- 		{
-		string char_string = std::to_string(char_number);
-		char_string.insert(0,"./Sim_data/32_terminals_no_selection/TREvoSim_");
-		char_string.append("_characters");
+    cout << "Starting USPR\n\n";
+    TBR_out << "Mean distances for: EW for different character numbers\n\n";
 
-		//ifstream testfile (string(char_string + "/TREvoSim_output/TREvoSim_tree_000.nex"));
-		//if (testfile.is_open())cout<<char_string<<"\n";
+    for (int char_number = 100; char_number < 1000; char_number++)
+    {
+        string char_string = std::to_string(char_number);
+        char_string.insert(0, "./Sim_data/32_terminals_no_selection/TREvoSim_");
+        char_string.append("_characters");
 
-		DIR* dir = opendir(char_string.c_str());
-		if(!dir) continue;
+        //ifstream testfile (string(char_string + "/TREvoSim_output/TREvoSim_tree_000.nex"));
+        //if (testfile.is_open())cout<<char_string<<"\n";
 
-		cout<<"Working on folder"<<char_string<<"\n\n";
+        DIR *dir = opendir(char_string.c_str());
+        if (!dir) continue;
 
-		//RJG - Main loop opens all runs and does comparison
-			for (int run_number=0;run_number<1000;run_number++)
- 			{
-			string run_string =	std::to_string(run_number);
-			//RJG - String with zero padding
-			stringstream run_number_pad; 
-			run_number_pad << setw(3) << std::setfill('0') << run_number;
+        cout << "Working on folder" << char_string << "\n\n";
 
-			//RJG file strings within each folder
-			string EWfile_string=string(char_string + "/TREvoSim_output/tnt/" + run_string +"_POUT.nex");
-			string simfile_string=string(char_string + "/TREvoSim_output/TREvoSim_tree_" + run_number_pad.str() +".nex");
+        //RJG - Main loop opens all runs and does comparison
+        for (int run_number = 0; run_number < 1000; run_number++)
+        {
+            string run_string = std::to_string(run_number);
+            //RJG - String with zero padding
+            stringstream run_number_pad;
+            run_number_pad << setw(3) << std::setfill('0') << run_number;
 
-			//Read sim file for run
-			string readtree="";
-			ifstream simfile (simfile_string);
-	
-			if (simfile.is_open())
-			{
-				while ( getline (simfile,readtree) )
-				{
-					string temp=readtree;
-					if(temp.find("[&U]")!=string::npos) T1_line=readtree;
-				}
-				int tree_start = T1_line.rfind("]");
-				T1_line.erase(0,tree_start+1);
-				T1_line.pop_back();
-				strip_branchlengths(T1_line);
-				cout << "Read sim tree as:" << T1_line << '\n';
-				simfile.close();
-			}
+            //RJG file strings within each folder
+            string EWfile_string = string(char_string + "/TREvoSim_output/tnt/" + run_string + "_POUT.nex");
+            string simfile_string = string(char_string + "/TREvoSim_output/TREvoSim_tree_" + run_number_pad.str() + ".nex");
 
-			//RJG - variables
-			int total_distance=0;
-			int tree_number=0; 
-			double mean_distance=0.; 
+            //Read sim file for run
+            string readtree = "";
+            ifstream simfile (simfile_string);
 
-			//RJG Equal weights
+            if (simfile.is_open())
+            {
+                while ( getline (simfile, readtree) )
+                {
+                    string temp = readtree;
+                    if (temp.find("[&U]") != string::npos) T1_line = readtree;
+                }
+                int tree_start = T1_line.rfind("]");
+                T1_line.erase(0, tree_start + 1);
+                T1_line.pop_back();
+                strip_branchlengths(T1_line);
+                cout << "Read sim tree as:" << T1_line << '\n';
+                simfile.close();
+            }
 
-			ifstream EWfile (EWfile_string);
-			if (EWfile.is_open())
-			{
-				while (getline(EWfile, T2_line))
-				{
-						if(T2_line[0]=='(')
-						{
-							cout<<T2_line<<"\n\n";
-							tree_number++;
-							cout<<"Calculating TBR for tree "<<tree_number<<"; run number "<<run_number<<" character number "<<char_number<<"\n";
-							cout<<"Tree is "<<T2_line;
+            //RJG - variables
+            int total_distance = 0;
+            int tree_number = 0;
+            double mean_distance = 0.;
 
-							// load into data structures
-							uforest F1 = uforest(T1_line, &label_map, &reverse_label_map);
-							F1.normalize_order();
-							uforest F2 = uforest(T2_line, &label_map, &reverse_label_map);
-							F2.normalize_order();
-							cout << "T1: " << F1.str(false, &reverse_label_map) << endl;
-							cout << "T2: " << F2.str(false, &reverse_label_map) << endl;
+            //RJG Equal weights
+            ifstream EWfile (EWfile_string);
+            if (!EWfile.is_open())continue;
 
-							// compute TBR distance
-							if (COMPUTE_TBR_APPROX) {
-							cout << "a_TBR: " << tbr_high_lower_bound(F1, F2) << " <= d_TBR <= " << tbr_low_upper_bound(F1, F2) << endl;
-							}
+            while (getline(EWfile, T2_line))
+            {
+                if (T2_line[0] == '(')
+                {
+                    cout << T2_line << "\n\n";
+                    tree_number++;
+                    cout << "Calculating TBR for tree " << tree_number << "; run number " << run_number << "; character number " << char_number << ".\n";
+                    cout << "Tree is " << T2_line;
 
-							if (COMPUTE_TBR)
-							{
-								uforest *MAF1 = NULL;
-								uforest *MAF2 = NULL;
-								int distance = tbr_distance(F1, F2, false, &MAF1, &MAF2);
-								cout << "d_TBR = " << distance << endl;
-								total_distance+=distance;
+                    // load into data structures
+                    uforest F1 = uforest(T1_line, &label_map, &reverse_label_map);
+                    F1.normalize_order();
+                    uforest F2 = uforest(T2_line, &label_map, &reverse_label_map);
+                    F2.normalize_order();
+                    cout << "T1: " << F1.str(false, &reverse_label_map) << endl;
+                    cout << "T2: " << F2.str(false, &reverse_label_map) << endl;
 
+                    // compute TBR distance
+                    if (COMPUTE_TBR_APPROX)
+                    {
+                        cout << "a_TBR: " << tbr_high_lower_bound(F1, F2) << " <= d_TBR <= " << tbr_low_upper_bound(F1, F2) << endl;
+                    }
 
-								if (MAF1 != NULL) 
-								{
-									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
-									delete MAF1;
-								}
-								if (MAF2 != NULL) 
-								{
-									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
-									delete MAF2;
-								}
-							}
+                    if (COMPUTE_TBR)
+                    {
+                        uforest *MAF1 = NULL;
+                        uforest *MAF2 = NULL;
+                        int distance = tbr_distance(F1, F2, false, &MAF1, &MAF2);
+                        cout << "d_TBR = " << distance << endl;
 
-							int count;
-							if (PRINT_mAFS) 
-							{
-								count = tbr_print_mAFs(F1, F2);
-								cout << count << " mAFs" << endl;
-							}
-							else if (COUNT_mAFS) 
-							{
-								count = tbr_count_mAFs(F1, F2);
-								cout << count << " mAFs" << endl;
-							}
+                        if (MAF1 != NULL)
+                        {
+                            cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
+                            delete MAF1;
+                        }
+                        if (MAF2 != NULL)
+                        {
+                            cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
+                            delete MAF2;
+                        }
+                    }
 
-							if (COMPUTE_REPLUG) 
-							{
-								uforest *MAF1 = NULL;
-								uforest *MAF2 = NULL;
-								int d_replug = replug_distance(F1, F2, false, &MAF1, &MAF2);
-								cout << "d_R = " << d_replug << endl;
-								if (MAF1 != NULL) 
-								{
-									cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
-									delete MAF1;
-								}
-								if (MAF2 != NULL) 
-								{
-									cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
-									delete MAF2;
-								}
-							}
+                    int count;
+                    if (PRINT_mAFS)
+                    {
+                        count = tbr_print_mAFs(F1, F2);
+                        cout << count << " mAFs" << endl;
+                    }
+                    else if (COUNT_mAFS)
+                    {
+                        count = tbr_count_mAFs(F1, F2);
+                        cout << count << " mAFs" << endl;
+                    }
 
-							if (COMPUTE_USPR)
-							{
-								int d_uspr = uspr_distance(F1, F2);
-								cout << "d_USPR = " << d_uspr << endl;
-							}
-						}
-					}
-			EWfile.close();
-			}
+                    if (COMPUTE_REPLUG)
+                    {
+                        uforest *MAF1 = NULL;
+                        uforest *MAF2 = NULL;
+                        int d_replug = replug_distance(F1, F2, false, &MAF1, &MAF2);
+                        cout << "d_R = " << d_replug << endl;
+                        if (MAF1 != NULL)
+                        {
+                            cout << "F1: " << MAF1->str(false, &reverse_label_map) << endl;
+                            delete MAF1;
+                        }
+                        if (MAF2 != NULL)
+                        {
+                            cout << "F2: " << MAF2->str(false, &reverse_label_map) << endl;
+                            delete MAF2;
+                        }
+                    }
 
-			mean_distance=(double)total_distance/(double)tree_number;
-			TBR_out<<","<< mean_distance;
+                    if (COMPUTE_USPR)
+                    {
+                        int d_uspr = uspr_distance(F1, F2);
+                        cout << "d_USPR = " << d_uspr << endl;
+                        total_distance += d_uspr;
 
-			//RJG Reset variables
-			mean_distance=0;
-			total_distance=0;
-			tree_number=0;
-
-			mean_distance=(double)total_distance/(double)tree_number;
-			TBR_out<<","<< mean_distance<<"\n";
-			TBR_out.flush();
-			}
-	
-	
-		
-		}
-	
-	}
-	
+                    }
+                }
+            }
+            EWfile.close();
 
 
-TBR_out.close();
+            mean_distance = (double)total_distance / (double)tree_number;
+            TBR_out << "," << mean_distance << "," << run_number << "," << char_number << "\n";
+            TBR_out.flush();
+
+            //RJG Reset variables
+            mean_distance = 0.;
+            total_distance = 0;
+            tree_number = 0;
+
+            mean_distance = (double)total_distance / (double)tree_number;
+        }
+
+    }
+
+    TBR_out.close();
 }
