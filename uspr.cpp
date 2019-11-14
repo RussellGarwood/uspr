@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
                     F2.normalize_order();
                     cout << "T1: " << F1.str(false, &reverse_label_map) << endl;
                     cout << "T2: " << F2.str(false, &reverse_label_map) << endl;
-
+                    /*
                     // compute TBR distance
                     if (COMPUTE_TBR_APPROX)
                     {
@@ -320,7 +320,7 @@ int main(int argc, char *argv[])
                             delete MAF2;
                         }
                     }
-
+                    
                     int count;
                     if (PRINT_mAFS)
                     {
@@ -350,7 +350,7 @@ int main(int argc, char *argv[])
                             delete MAF2;
                         }
                     }
-
+                    */
                     if (COMPUTE_USPR)
                     {
                         int d_uspr = uspr_distance(F1, F2);
@@ -358,6 +358,7 @@ int main(int argc, char *argv[])
                         total_distance += d_uspr;
 
                     }
+                    
                 }
             }
             EWfile.close();
